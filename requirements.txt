@@ -3,3 +3,4 @@ tensorflow
 pillow
 numpy
 gdown
+PIL
