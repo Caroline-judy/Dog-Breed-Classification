@@ -2,13 +2,6 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 import tensorflow as tf
-import gdown
-import os
-
-# Function to download the model from Google Drive
-def download_model():
-    gdown_link = 'https://drive.google.com/file/d/1JJMh39JMsh8wUTdGBTL9lyN7xAIx3Vyq/view?usp=sharing'  # Replace with your actual Google Drive link
-    gdown.download(gdown_link, 'dog_classification.h5', quiet=False)
 
 # Load the model
 def load_model(model_path):
@@ -77,7 +70,7 @@ def main():
         predictions = model.predict(preprocessed_image)
 
         # Get the top 3 predictions
-        class_names = [
+        class_names =   [
             "Chihuahua", "Japanese_spaniel", "Maltese_dog", "Pekinese", "Shih-Tzu", "Blenheim_spaniel", 
             "papillon", "toy_terrier", "Rhodesian_ridgeback", "Afghan_hound", "basset", "beagle", 
             "bloodhound", "bluetick", "black-and-tan_coonhound", "Walker_hound", "English_foxhound", 
