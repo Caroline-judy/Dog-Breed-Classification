@@ -67,29 +67,8 @@ def main():
     uploaded_file = st.file_uploader("Choose a dog image...", type=["jpg", "png", "jpeg"])
 
     if uploaded_file is not None:
-        # Display the uploaded image with a fixed width
+        # Display the uploaded image
         image = Image.open(uploaded_file)
-
-        # Center the image and increase its size
-        st.markdown(
-            """
-            <style>
-            .center {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            .center img {
-                width: 400px;  /* Increase image size */
-                border-radius: 15px; /* Optional: add rounded corners */
-            }
-            </style>
-            """, 
-            unsafe_allow_html=True
-        )
-
-        st.markdown('<div class="center"><img src="data:image/jpeg;base64,{}"/></div>'.format(
-            base64.b64encode(uploaded_file.getvalue()).decode('utf-8')), unsafe_allow_html=True)
 
         # Preprocess the image
         preprocessed_image = preprocess_image(image)
@@ -133,24 +112,30 @@ def main():
         ]
         top_3 = get_top_3_predictions(predictions, class_names)
 
-        # Display the top 3 predictions in a table with a black background
-        st.markdown("<div style='text-align: center;'><h2>Top 3 Breed Predictions:</h2></div>", unsafe_allow_html=True)
-
         # Prepare data for the DataFrame
         top_3_data = [(breed, f"{prob:.2f}") for breed, prob in top_3]  # Format probabilities to 2 decimal places
         df_top_3 = pd.DataFrame(top_3_data, columns=["Breed", "Probability (%)"])
 
-        # Center the DataFrame in the layout
-        st.markdown(
-            "<div style='display: flex; justify-content: center;'>"
-            + df_top_3.style.set_table_attributes('style="background-color: black; color: white; text-align: center;"')
-                .set_table_styles([
-                    {'selector': 'th', 'props': [('background-color', 'grey'), ('color', 'white')]},  # Header style
-                    {'selector': 'td', 'props': [('text-align', 'center')]}  # Center-align the text
-                ]).to_html()
-            + "</div>",
-            unsafe_allow_html=True
-        )
+        # Create two columns for layout
+        col1, col2 = st.columns([2, 1])  # Adjust the ratios as needed
+
+        with col1:
+            # Display the uploaded image with a fixed width
+            st.image(image, width=400, caption='Uploaded Dog Image', use_column_width=False)
+
+        with col2:
+            # Display the top 3 predictions in a table with a black background
+            st.markdown("<h2 style='text-align: center;'>Top 3 Breed Predictions:</h2>", unsafe_allow_html=True)
+
+            # Center the DataFrame in the layout
+            st.markdown(
+                df_top_3.style.set_table_attributes('style="background-color: black; color: white; text-align: center;"')
+                    .set_table_styles([
+                        {'selector': 'th', 'props': [('background-color', 'grey'), ('color', 'white')]},  # Header style
+                        {'selector': 'td', 'props': [('text-align', 'center')]}  # Center-align the text
+                    ]).to_html(),
+                unsafe_allow_html=True
+            )
 
 if __name__ == "__main__":
     main()
