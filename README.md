@@ -15,4 +15,6 @@ The model was trained using the **Stanford Dog Breed Dataset**, which can be acc
 
 This dataset is well-suited for image classification tasks and provides a diverse set of dog images for training robust models.
 
+## 📝 Learn More
+
 You can read more about my journey in building this project in my blog: [From Non-CS to Tech: My Journey in Building a Dog Breed Classification Project](https://medium.com/@carolinejudy2002/from-non-cs-to-tech-my-journey-in-building-a-dog-breed-classification-project-5c6badba7e30).
