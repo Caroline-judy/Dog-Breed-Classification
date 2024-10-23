@@ -1,10 +1,10 @@
-
 import streamlit as st
 from PIL import Image
 import numpy as np
 import tensorflow as tf
 import gdown
 import os
+import base64
 
 # Function to download the model from Google Drive
 def download_model():
@@ -30,27 +30,33 @@ def get_top_3_predictions(predictions, class_names):
     top_3_breeds = [class_names[i] for i in top_3_indices]  # Get breed names
     return list(zip(top_3_breeds, top_3_probs))
 
+# Add a background image (using CSS)
+def set_background(image_file):
+    # Read and encode the image file
+    with open(image_file, "rb") as file:
+        encoded_string = base64.b64encode(file.read()).decode()
+    # Set the background using CSS
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url('data:image/png;base64,{encoded_string}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }}
+        </style>
+        """, 
+        unsafe_allow_html=True
+    )
+
 # Main function for Streamlit App
 def main():
     st.set_page_config(page_title="Dog Breed Classifier", page_icon="🐶", layout="centered")
-
-    # Add a background image (using CSS)
-    def set_background(image_file):
-        with open(image_file, "rb") as file:
-            encoded_string = file.read()
-        st.markdown(
-            f"""
-            <style>
-            .stApp {{
-                background-image: url('data:image/png;base64,{encoded_string}');
-                background-size: cover;
-                background-position: center;
-            }}
-            </style>
-            """, unsafe_allow_html=True
-        )
     
-    set_background('pexels-pixabay-531880.jpg')  # Your background image file
+    # Set the background image
+    set_background('pexels-vafphotos-18126197.jpg')  # Path to your image file
 
     # Title and description
     st.title("🐕 Dog Breed Classifier")
@@ -79,7 +85,6 @@ def main():
 
         # Get the top 3 predictions
         class_names = [
-            # List of dog breeds
             "Chihuahua", "Japanese_spaniel", "Maltese_dog", "Pekinese", "Shih-Tzu", "Blenheim_spaniel", 
             "papillon", "toy_terrier", "Rhodesian_ridgeback", "Afghan_hound", "basset", "beagle", 
             "bloodhound", "bluetick", "black-and-tan_coonhound", "Walker_hound", "English_foxhound", 
