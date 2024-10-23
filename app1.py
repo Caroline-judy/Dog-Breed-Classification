@@ -68,7 +68,27 @@ def main():
     if uploaded_file is not None:
         # Display the uploaded image with a fixed width
         image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Image", width=300)  # Reduced image size
+
+        # Center the image and increase its size
+        st.markdown(
+            """
+            <style>
+            .center {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .center img {
+                width: 400px;  /* Increase image size */
+                border-radius: 15px; /* Optional: add rounded corners */
+            }
+            </style>
+            """, 
+            unsafe_allow_html=True
+        )
+
+        st.markdown('<div class="center"><img src="data:image/jpeg;base64,{}"/></div>'.format(
+            base64.b64encode(uploaded_file.getvalue()).decode('utf-8')), unsafe_allow_html=True)
 
         # Preprocess the image
         preprocessed_image = preprocess_image(image)
