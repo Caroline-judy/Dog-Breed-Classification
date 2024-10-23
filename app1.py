@@ -5,6 +5,7 @@ import tensorflow as tf
 import gdown
 import os
 import base64
+import pandas as pd
 
 # Function to download the model from Google Drive
 def download_model():
@@ -132,10 +133,24 @@ def main():
         ]
         top_3 = get_top_3_predictions(predictions, class_names)
 
-        # Display the top 3 predictions with percentages
-        st.subheader("Top 3 Breed Predictions:")
-        for breed, prob in top_3:
-            st.write(f"**{breed}**: {prob:.2f}%")
+        # Display the top 3 predictions in a table with a black background
+        st.markdown("<div style='text-align: center;'><h2>Top 3 Breed Predictions:</h2></div>", unsafe_allow_html=True)
+
+        # Prepare data for the DataFrame
+        top_3_data = [(breed, f"{prob:.2f}") for breed, prob in top_3]  # Format probabilities to 2 decimal places
+        df_top_3 = pd.DataFrame(top_3_data, columns=["Breed", "Probability (%)"])
+
+        # Center the DataFrame in the layout
+        st.markdown(
+            "<div style='display: flex; justify-content: center;'>"
+            + df_top_3.style.set_table_attributes('style="background-color: black; color: white; text-align: center;"')
+                .set_table_styles([
+                    {'selector': 'th', 'props': [('background-color', 'grey'), ('color', 'white')]},  # Header style
+                    {'selector': 'td', 'props': [('text-align', 'center')]}  # Center-align the text
+                ]).to_html()
+            + "</div>",
+            unsafe_allow_html=True
+        )
 
 if __name__ == "__main__":
     main()
